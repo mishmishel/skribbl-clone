@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { createRoom, joinRoom, getRoom, nextTurn, checkGuess } = require('./gameState');
+const { createRoom, joinRoom, nextTurn, checkGuess } = require('./gameState');
 
 const app = express();
 app.use(cors());
