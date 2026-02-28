@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { socket } from './socket'
+import Home from './components/Home'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
@@ -9,7 +10,16 @@ function App() {
 
   return (
     <div>
-      {gamePhase === 'home' && <p>Home screen goes here</p>}
+      {gamePhase === 'home' && 
+      (
+        <Home
+        username={username}
+        setUsername={setUsername}
+        setPlayers={setPlayers}
+        setRoomCode={setRoomCode}
+        setGamePhase={setGamePhase}
+      />
+      )}
       {gamePhase === 'lobby' && <p>Lobby goes here</p>}
       {gamePhase === 'game' && <p>Game goes here</p>}
       {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}

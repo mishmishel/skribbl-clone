@@ -14,7 +14,7 @@ io.on('connection', (socket) => {
   socket.on('create-room', ({ username }, callback) => {
     const room = createRoom(socket.id, username);
     socket.join(room.code);
-    callback({ roomCode: room.code, playerId: socket.id });
+    callback({ roomCode: room.code, playerId: socket.id, players: room.players });
   });
 
   socket.on('join-room', ({ roomCode, username }, callback) => {
