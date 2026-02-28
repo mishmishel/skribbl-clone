@@ -13,6 +13,7 @@ function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase }) 
 
         socket.emit('create-room', { username }, (response) => {
           // server sends back { roomCode, players }
+          console.log('Full response:', response)
           setRoomCode(response.roomCode)
           console.log(response.roomCode)
           setPlayers(response.players)
