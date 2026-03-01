@@ -61,4 +61,4 @@ function checkGuess(roomCode, guess, socketId) {
     return { correct: false };
 }
 
-module.exports = { createRoom, joinRoom, nextTurn, checkGuess };
+module.exports = { createRoom, joinRoom, nextTurn, checkGuess, rooms };

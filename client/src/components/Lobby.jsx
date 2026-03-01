@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { socket } from '../socket'
 
 function Lobby({ username, roomCode, players, setGamePhase }) {
+    function handleLeaveRoom() {
+        socket.emit('leave-room', { roomCode })
+        setGamePhase('home')
+    }
 
     function handleStartGame() {
         socket.emit('start-game', { roomCode })
@@ -19,6 +23,7 @@ function Lobby({ username, roomCode, players, setGamePhase }) {
           </ul>
           {/* only show start button to the host */}
           <button onClick={handleStartGame}>Start Game</button>
+          <button onClick={handleLeaveRoom}>Leave Room</button>
         </div>
     )
 }

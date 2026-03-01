@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { createRoom, joinRoom, nextTurn, checkGuess } = require('./gameState');
+const { createRoom, joinRoom, nextTurn, checkGuess, rooms } = require('./gameState');
 
 const app = express();
 app.use(cors());
@@ -44,7 +44,45 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', () => { /* handle player leaving */ });
+  socket.on('leave-room', ({ roomCode }) => {
+    const room = rooms[roomCode];
+    if (!room) return;
+  
+    room.players = room.players.filter(p => p.id !== socket.id);
+    socket.leave(roomCode);
+  
+    if (room.players.length === 0) {
+      delete rooms[roomCode];
+    } else {
+      if (room.hostId === socket.id) {
+        room.hostId = room.players[0].id;
+        console.log('Host transferred to:', room.players[0].username)
+      }
+      io.to(roomCode).emit('room-update', room);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    for (const roomCode in rooms) {
+      const room = rooms[roomCode];
+      const playerIndex = room.players.findIndex(p => p.id === socket.id);
+      
+      if (playerIndex !== -1) {
+        room.players.splice(playerIndex, 1);
+        
+        if (room.players.length === 0) {
+          delete rooms[roomCode];
+        } else {
+          // transfer host if needed
+          if (room.hostId === socket.id) {
+            room.hostId = room.players[0].id;
+          }
+          io.to(roomCode).emit('room-update', room);
+        }
+        break;
+      }
+    }
+  })
 });
 
 function startTurnTimer(roomCode) {
