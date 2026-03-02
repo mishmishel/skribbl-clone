@@ -9,7 +9,6 @@ function Lobby({ username, roomCode, players, setGamePhase, hostId, playerId }) 
 
     function handleStartGame() {
         socket.emit('start-game', { roomCode })
-        setGamePhase('game')
     }
 
     return (

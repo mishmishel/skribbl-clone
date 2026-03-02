@@ -15,9 +15,14 @@ function App() {
     socket.on('room-update', (room) => {
       setPlayers(room.players)
     })
+
+    socket.on('game-started', (room) => {
+      setGamePhase('game')
+    })
   
     return () => {
       socket.off('room-update') // cleanup when component unmounts
+      socket.off('game-started')
     }
   }, [])
 
