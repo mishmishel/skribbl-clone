@@ -28,6 +28,12 @@ function Canvas({ roomCode, isDrawer }) {
       const pos = getPos(e)
       ctx.beginPath()
       ctx.moveTo(pos.x, pos.y)
+    
+      // emit the start of a new stroke
+      socket.emit('draw', {
+        roomCode,
+        drawData: { x: pos.x, y: pos.y, type: 'start' }
+      })
     }
 
     function draw(e) {
@@ -70,14 +76,24 @@ function Canvas({ roomCode, isDrawer }) {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-
+  
+    ctx.strokeStyle = '#000000'
+    ctx.lineWidth = 4
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+  
     socket.on('draw', (drawData) => {
-      ctx.strokeStyle = drawData.color
-      ctx.lineWidth = drawData.lineWidth
-      ctx.lineTo(drawData.x, drawData.y)
-      ctx.stroke()
+      if (drawData.type === 'start') {
+        ctx.beginPath()
+        ctx.moveTo(drawData.x, drawData.y)
+      } else {
+        ctx.strokeStyle = drawData.color
+        ctx.lineWidth = drawData.lineWidth
+        ctx.lineTo(drawData.x, drawData.y)
+        ctx.stroke()
+      }
     })
-
+  
     return () => socket.off('draw')
   }, [])
 
