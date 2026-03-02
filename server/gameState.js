@@ -26,11 +26,15 @@ function joinRoom(roomCode, socketId, username) {
 }
 
 function nextTurn(roomCode) {
-    const room = rooms[roomCode];
-    const nextIndex = room.currentDrawerIndex + 1;
+  const room = rooms[roomCode];
   
+  if (room.roundNumber === 0) {
+    // first turn ever — start at index 0
+    room.roundNumber = 1;
+    room.currentDrawerIndex = 0;
+  } else {
+    const nextIndex = room.currentDrawerIndex + 1;
     if (nextIndex >= room.players.length) {
-      // everyone has drawn this round
       room.roundNumber++;
       room.currentDrawerIndex = 0;
       if (room.roundNumber > room.totalRounds) {
@@ -40,10 +44,11 @@ function nextTurn(roomCode) {
     } else {
       room.currentDrawerIndex = nextIndex;
     }
-  
-    room.currentWord = getRandomWord();
-    room.correctGuessers = [];
-    return room;
+  }
+
+  room.currentWord = getRandomWord();
+  room.correctGuessers = [];
+  return room;
 }
 
 function checkGuess(roomCode, guess, socketId) {

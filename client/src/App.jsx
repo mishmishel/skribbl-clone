@@ -10,6 +10,7 @@ function App() {
   const [players, setPlayers] = useState([])
   const [username, setUsername] = useState('')
   const [hostId, setHostId] = useState('')
+  const [currentDrawer, setCurrentDrawer] = useState(null)
 
   useEffect(() => {
     socket.on('room-update', (room) => {
@@ -17,6 +18,8 @@ function App() {
     })
 
     socket.on('game-started', (room) => {
+      const drawer = room.players[room.currentDrawerIndex]
+      setCurrentDrawer(drawer.id)
       setGamePhase('game')
     })
   
@@ -52,7 +55,7 @@ function App() {
       {gamePhase === 'game' && (
         <Canvas
         roomCode={roomCode}
-        isDrawer={true}
+        isDrawer={currentDrawer === socket.id}
       />
       )}
       {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}
