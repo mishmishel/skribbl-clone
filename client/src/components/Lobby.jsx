@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { socket } from '../socket'
 
-function Lobby({ username, roomCode, players, setGamePhase }) {
+function Lobby({ username, roomCode, players, setGamePhase, hostId, playerId }) {
     function handleLeaveRoom() {
         socket.emit('leave-room', { roomCode })
         setGamePhase('home')
@@ -9,6 +9,7 @@ function Lobby({ username, roomCode, players, setGamePhase }) {
 
     function handleStartGame() {
         socket.emit('start-game', { roomCode })
+        setGamePhase('game')
     }
 
     return (
@@ -21,8 +22,9 @@ function Lobby({ username, roomCode, players, setGamePhase }) {
               <li key={player.id}>{player.username}</li>
             ))}
           </ul>
-          {/* only show start button to the host */}
-          <button onClick={handleStartGame}>Start Game</button>
+          {hostId === playerId && (
+            <button onClick={handleStartGame}>Start Game</button>
+          )}
           <button onClick={handleLeaveRoom}>Leave Room</button>
         </div>
     )

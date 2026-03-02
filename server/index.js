@@ -56,7 +56,6 @@ io.on('connection', (socket) => {
     } else {
       if (room.hostId === socket.id) {
         room.hostId = room.players[0].id;
-        console.log('Host transferred to:', room.players[0].username)
       }
       io.to(roomCode).emit('room-update', room);
     }

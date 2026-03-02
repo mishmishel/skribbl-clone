@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { socket } from '../socket'
 
-function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase }) {
+function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase, setHostId }) {
     const [joinCode, setJoinCode] = useState('')
     const [error, setError] = useState('')
 
@@ -13,6 +13,7 @@ function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase }) 
 
         socket.emit('create-room', { username }, (response) => {
           // server sends back { roomCode, players }
+          setHostId(response.playerId)
           console.log('Full response:', response)
           setRoomCode(response.roomCode)
           console.log(response.roomCode)
@@ -33,6 +34,7 @@ function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase }) 
               setError('Room not found!')
               return
             }
+            setHostId(response.room.hostId)
             setRoomCode(response.room.code)
             setPlayers(response.room.players)
             setGamePhase('lobby')

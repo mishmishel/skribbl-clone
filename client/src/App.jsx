@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { socket } from './socket'
 import Home from './components/Home'
 import Lobby from './components/Lobby'
+import Canvas from './components/Canvas'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
   const [roomCode, setRoomCode] = useState('')
   const [players, setPlayers] = useState([])
   const [username, setUsername] = useState('')
+  const [hostId, setHostId] = useState('')
 
   useEffect(() => {
     socket.on('room-update', (room) => {
@@ -29,6 +31,7 @@ function App() {
         setPlayers={setPlayers}
         setRoomCode={setRoomCode}
         setGamePhase={setGamePhase}
+        setHostId={setHostId}
       />
       )}
       {gamePhase === 'lobby' && (
@@ -37,9 +40,16 @@ function App() {
         roomCode={roomCode}
         players={players}
         setGamePhase={setGamePhase}
+        hostId={hostId}
+        playerId={socket.id}
       />
       )}
-      {gamePhase === 'game' && <p>Game goes here</p>}
+      {gamePhase === 'game' && (
+        <Canvas
+        roomCode={roomCode}
+        isDrawer={true}
+      />
+      )}
       {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}
     </div>
   )
