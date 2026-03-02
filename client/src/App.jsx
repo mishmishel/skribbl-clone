@@ -11,6 +11,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [hostId, setHostId] = useState('')
   const [currentDrawer, setCurrentDrawer] = useState(null)
+  const [currentWord, setCurrentWord] = useState('')
 
   useEffect(() => {
     socket.on('room-update', (room) => {
@@ -20,7 +21,14 @@ function App() {
     socket.on('game-started', (room) => {
       const drawer = room.players[room.currentDrawerIndex]
       setCurrentDrawer(drawer.id)
+      setCurrentWord(room.currentWord)
       setGamePhase('game')
+    })
+
+    socket.on('next-turn', (room) => {
+      const drawer = room.players[room.currentDrawerIndex]
+      setCurrentDrawer(drawer.id)
+      setCurrentWord(room.currentWord)
     })
   
     return () => {
@@ -53,10 +61,16 @@ function App() {
       />
       )}
       {gamePhase === 'game' && (
-        <Canvas
-        roomCode={roomCode}
-        isDrawer={currentDrawer === socket.id}
-      />
+        <div>
+          <p>{currentDrawer === socket.id
+          ? currentWord
+          : currentWord.split('').map(char => char === ' ' ? ' ' : '_').join(' ')
+          }</p>
+          <Canvas
+          roomCode={roomCode}
+          isDrawer={currentDrawer === socket.id}
+          />
+        </div>
       )}
       {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}
     </div>
