@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { socket } from '../socket'
 
 function Lobby({ username, roomCode, players, setGamePhase, hostId, playerId }) {

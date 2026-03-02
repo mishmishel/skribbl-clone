@@ -3,6 +3,7 @@ import { socket } from './socket'
 import Home from './components/Home'
 import Lobby from './components/Lobby'
 import Canvas from './components/Canvas'
+import Chat from './components/Chat'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
@@ -70,6 +71,10 @@ function App() {
           roomCode={roomCode}
           isDrawer={currentDrawer === socket.id}
           />
+          <Chat 
+          roomCode={roomCode} 
+          username={username} 
+          isDrawer={currentDrawer === socket.id} />
         </div>
       )}
       {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}

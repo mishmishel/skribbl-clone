@@ -27,6 +27,7 @@ function joinRoom(roomCode, socketId, username) {
 
 function nextTurn(roomCode) {
   const room = rooms[roomCode];
+  if (!room) return null;
   
   if (room.roundNumber === 0) {
     // first turn ever — start at index 0
