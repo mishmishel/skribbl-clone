@@ -11,7 +11,7 @@ function createRoom(socketId, username) {
       currentDrawerIndex: 0,
       currentWord: null,
       roundNumber: 0,
-      totalRounds: 3,
+      totalRounds: 1,
       gameOver: false,
       correctGuessers: [],
     };

@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
 });
 
 function startTurnTimer(roomCode) {
-  let timeLeft = 80;
+  let timeLeft = 60;
   const interval = setInterval(() => {
     io.to(roomCode).emit('timer', { timeLeft });
     timeLeft--;

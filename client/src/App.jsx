@@ -13,6 +13,7 @@ function App() {
   const [hostId, setHostId] = useState('')
   const [currentDrawer, setCurrentDrawer] = useState(null)
   const [currentWord, setCurrentWord] = useState('')
+  const [timeLeft, setTimeLeft] = useState(60)
 
   useEffect(() => {
     socket.on('room-update', (room) => {
@@ -31,10 +32,16 @@ function App() {
       setCurrentDrawer(drawer.id)
       setCurrentWord(room.currentWord)
     })
+
+    socket.on('timer', ({ timeLeft }) => {
+      setTimeLeft(timeLeft)
+    })
   
     return () => {
       socket.off('room-update') // cleanup when component unmounts
       socket.off('game-started')
+      socket.off('next-turn')
+      socket.off('timer')
     }
   }, [])
 
@@ -63,6 +70,7 @@ function App() {
       )}
       {gamePhase === 'game' && (
         <div>
+          <p>Time left: {timeLeft}s</p>
           <p>{currentDrawer === socket.id
           ? currentWord
           : currentWord.split('').map(char => char === ' ' ? ' ' : '_').join(' ')
