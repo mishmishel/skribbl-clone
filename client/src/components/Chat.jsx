@@ -13,10 +13,15 @@ function Chat({ roomCode, username, isDrawer }) {
         socket.on('correct-guess', ({ username, scores }) => {
           setMessages(prev => [...prev, { username, message: 'guessed correctly!', correct: true }])
         })
+
+        socket.on('next-turn', () => {
+            setMessages([])
+        })
       
         return () => {
           socket.off('chat-message')
           socket.off('correct-guess')
+          socket.off('next-turn')
         }
     }, [])
 

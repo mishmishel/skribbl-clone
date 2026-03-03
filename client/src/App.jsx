@@ -31,6 +31,7 @@ function App() {
       const drawer = room.players[room.currentDrawerIndex]
       setCurrentDrawer(drawer.id)
       setCurrentWord(room.currentWord)
+      setTimeLeft(60)
     })
 
     socket.on('timer', ({ timeLeft }) => {

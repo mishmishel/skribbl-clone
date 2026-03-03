@@ -93,8 +93,17 @@ function Canvas({ roomCode, isDrawer }) {
         ctx.stroke()
       }
     })
+
+    socket.on('next-turn', () => {
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    })
   
-    return () => socket.off('draw')
+    return () => {
+      socket.off('draw')
+      socket.off('next-turn')
+    }
   }, [])
 
   return (
