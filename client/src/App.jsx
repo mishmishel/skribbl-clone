@@ -23,6 +23,7 @@ function App() {
     })
 
     socket.on('game-started', (room) => {
+      console.log('game-started received')
       const drawer = room.players[room.currentDrawerIndex]
       setCurrentDrawer(drawer.id)
       setCurrentWord(room.currentWord)
@@ -41,7 +42,12 @@ function App() {
     })
 
     socket.on('game-over', (room) => {
+      console.log('game-over received on client!')
       setFinalScores(room.players)
+      setCurrentDrawer(null)
+      setCurrentWord('')
+      setTimeLeft(60)
+      setPlayers(room.players)
       setGamePhase('scoreboard')
     })
   
@@ -53,6 +59,18 @@ function App() {
       socket.off('game-over')
     }
   }, [])
+
+  function handleGoHome() {
+    setGamePhase('home')
+    setRoomCode('')
+    setPlayers([])
+    setHostId('')
+    setCurrentDrawer(null)
+    setCurrentWord('')
+    setTimeLeft(60)
+    setFinalScores([])
+    setUsername('')
+  }
 
   return (
     <div>
@@ -95,7 +113,7 @@ function App() {
         </div>
       )}
       {gamePhase === 'scoreboard' && (
-        <Scoreboard finalScores={finalScores} setGamePhase={setGamePhase}/>
+        <Scoreboard finalScores={finalScores} onGoHome={handleGoHome}/>
       )}
     </div>
   )

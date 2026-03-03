@@ -28,6 +28,8 @@ function joinRoom(roomCode, socketId, username) {
 function nextTurn(roomCode) {
   const room = rooms[roomCode];
   if (!room) return null;
+
+  console.log('nextTurn called - roundNumber:', room.roundNumber, 'currentDrawerIndex:', room.currentDrawerIndex, 'players:', room.players.length, 'totalRounds:', room.totalRounds)
   
   if (room.roundNumber === 0) {
     // first turn ever — start at index 0
@@ -36,6 +38,7 @@ function nextTurn(roomCode) {
   } else {
     const nextIndex = room.currentDrawerIndex + 1;
     if (nextIndex >= room.players.length) {
+      console.log('everyone has drawn, incrementing round')
       room.roundNumber++;
       room.currentDrawerIndex = 0;
       if (room.roundNumber > room.totalRounds) {
@@ -43,6 +46,7 @@ function nextTurn(roomCode) {
         return room;
       }
     } else {
+      console.log('advancing drawer to index', nextIndex)
       room.currentDrawerIndex = nextIndex;
     }
   }

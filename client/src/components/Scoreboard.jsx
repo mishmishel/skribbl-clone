@@ -1,4 +1,4 @@
-function Scoreboard({ finalScores, setGamePhase }) {
+function Scoreboard({ finalScores, onGoHome }) {
     return (
         <div>
             <h1>Scoreboard</h1>
@@ -9,7 +9,7 @@ function Scoreboard({ finalScores, setGamePhase }) {
             </li>
             ))}
             </ul>
-            <button onClick={() => setGamePhase('home')}>Go Home</button>
+            <button onClick={onGoHome}>Go Home</button>
         </div>
     )
 }
