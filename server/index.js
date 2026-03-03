@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { createRoom, joinRoom, nextTurn, checkGuess, rooms } = require('./gameState');
+const timers = {};
 
 const app = express();
 app.use(cors());
@@ -39,6 +40,20 @@ io.on('connection', (socket) => {
     const result = checkGuess(roomCode, guess, socket.id);
     if (result.correct) {
       io.to(roomCode).emit('correct-guess', { username, scores: result.scores });
+
+      // check if all players have guessed correctly
+      const room = rooms[roomCode];
+      const allGuessed = room.correctGuessers.length === room.players.length - 1;
+
+      if (allGuessed) {
+        const updatedRoom = nextTurn(roomCode);
+        if (updatedRoom.gameOver) {
+          io.to(roomCode).emit('game-over', updatedRoom);
+        } else {
+          io.to(roomCode).emit('next-turn', updatedRoom);
+          startTurnTimer(roomCode);
+        }
+      }
     } else {
       io.to(roomCode).emit('chat-message', { username, message: guess });
     }
@@ -85,13 +100,19 @@ io.on('connection', (socket) => {
 });
 
 function startTurnTimer(roomCode) {
+  if (timers[roomCode]) {
+    clearInterval(timers[roomCode])
+    delete timers[roomCode]
+  }
+  
   let timeLeft = 60;
-  const interval = setInterval(() => {
+  timers[roomCode] = setInterval(() => {
     io.to(roomCode).emit('timer', { timeLeft });
     timeLeft--;
     if (timeLeft < 0) {
       clearInterval(interval);
       const room = nextTurn(roomCode);
+      if (!room) return;
       if (room.gameOver) {
         io.to(roomCode).emit('game-over', room);
       } else {
