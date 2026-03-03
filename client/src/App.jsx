@@ -4,6 +4,7 @@ import Home from './components/Home'
 import Lobby from './components/Lobby'
 import Canvas from './components/Canvas'
 import Chat from './components/Chat'
+import Scoreboard from './components/Scoreboard'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
@@ -14,6 +15,7 @@ function App() {
   const [currentDrawer, setCurrentDrawer] = useState(null)
   const [currentWord, setCurrentWord] = useState('')
   const [timeLeft, setTimeLeft] = useState(60)
+  const [finalScores, setFinalScores] = useState([])
 
   useEffect(() => {
     socket.on('room-update', (room) => {
@@ -37,12 +39,18 @@ function App() {
     socket.on('timer', ({ timeLeft }) => {
       setTimeLeft(timeLeft)
     })
+
+    socket.on('game-over', (room) => {
+      setFinalScores(room.players)
+      setGamePhase('scoreboard')
+    })
   
     return () => {
       socket.off('room-update') // cleanup when component unmounts
       socket.off('game-started')
       socket.off('next-turn')
       socket.off('timer')
+      socket.off('game-over')
     }
   }, [])
 
@@ -86,7 +94,9 @@ function App() {
           isDrawer={currentDrawer === socket.id} />
         </div>
       )}
-      {gamePhase === 'scoreboard' && <p>Scoreboard goes here</p>}
+      {gamePhase === 'scoreboard' && (
+        <Scoreboard finalScores={finalScores} setGamePhase={setGamePhase}/>
+      )}
     </div>
   )
 }
