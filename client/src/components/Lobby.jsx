@@ -21,8 +21,18 @@ function Lobby({ username, roomCode, players, setGamePhase, hostId, playerId }) 
             ))}
           </ul>
           {hostId === playerId && (
-            <button onClick={handleStartGame}>Start Game</button>
-          )}
+            <>
+                <button 
+                onClick={handleStartGame}
+                disabled={players.length < 2}
+                >
+                Start Game
+                </button>
+                {players.length < 2 && (
+                <p>Waiting for at least one more player to join...</p>
+                )}
+            </>
+            )}
           <button onClick={handleLeaveRoom}>Leave Room</button>
         </div>
     )
