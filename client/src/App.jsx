@@ -5,6 +5,7 @@ import Lobby from './components/Lobby'
 import Canvas from './components/Canvas'
 import Chat from './components/Chat'
 import Scoreboard from './components/Scoreboard'
+import Playerlist from './components/Playerlist'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
@@ -50,12 +51,20 @@ function App() {
       setPlayers(room.players)
       setGamePhase('scoreboard')
     })
+
+    socket.on('correct-guess', ({ username, scores }) => {
+      setPlayers(prev => prev.map(player => {
+        const updated = scores.find(s => s.username === player.username)
+        return updated ? { ...player, score: updated.score } : player
+      }))
+    })
   
     return () => {
       socket.off('room-update') // cleanup when component unmounts
       socket.off('game-started')
       socket.off('next-turn')
       socket.off('timer')
+      socket.off('correct-guess')
       socket.off('game-over')
     }
   }, [])
@@ -110,6 +119,7 @@ function App() {
           roomCode={roomCode} 
           username={username} 
           isDrawer={currentDrawer === socket.id} />
+          <Playerlist players={players} currentDrawer={currentDrawer} />
         </div>
       )}
       {gamePhase === 'scoreboard' && (

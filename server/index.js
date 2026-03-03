@@ -110,7 +110,8 @@ function startTurnTimer(roomCode) {
     io.to(roomCode).emit('timer', { timeLeft });
     timeLeft--;
     if (timeLeft < 0) {
-      clearInterval(interval);
+      clearInterval(timers[roomCode])
+      delete timers[roomCode] 
       const room = nextTurn(roomCode);
       if (!room) return;
       if (room.gameOver) {
