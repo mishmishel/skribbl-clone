@@ -42,15 +42,49 @@ function Home({ username, setUsername, setPlayers, setRoomCode, setGamePhase, se
     }
 
     return (
-        <div>
-            <h1>Draw & Guess</h1>
-            <div>
-                <input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <button onClick={handleCreateRoom}>Create Room</button>
-                <input type="text" placeholder="Enter room code" value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
-                <button onClick={handleJoinRoom}>Join Room</button>
-                {error && <p>{error}</p>}
+        <div className="page">
+          <h1 className="page-title">Draw & Guess</h1>
+    
+          <div className="card" style={{ width: '480px' }}>
+    
+            <div className="form-row">
+              <span className="form-label">enter your username:</span>
+              <input
+                className="input"
+                type="text"
+                placeholder="username..."
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
+    
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+              <button className="btn btn-green" onClick={handleCreateRoom}>
+                create room
+              </button>
+            </div>
+    
+            <div className="form-row">
+              <span className="form-label">join room</span>
+              <input
+                className="input"
+                type="text"
+                placeholder="room code..."
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+              />
+              <button className="btn btn-grey" onClick={handleJoinRoom}>
+                join
+              </button>
+            </div>
+    
+            {error && (
+              <p style={{ color: '#ff4444', textAlign: 'center', marginTop: '8px' }}>
+                {error}
+              </p>
+            )}
+    
+          </div>
         </div>
     )
 }
