@@ -16,9 +16,11 @@ function Canvas({ roomCode, isDrawer }) {
 
     function getPos(e) {
       const rect = canvas.getBoundingClientRect()
+      const scaleX = canvas.width / rect.width
+      const scaleY = canvas.height / rect.height
       return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
       }
     }
 
@@ -109,10 +111,17 @@ function Canvas({ roomCode, isDrawer }) {
   return (
     <canvas
       ref={canvasRef}
-      width={800}
-      height={600}
-      style={{ border: '1px solid black', cursor: isDrawer ? 'crosshair' : 'default' }}
-    />
+      width={1000}
+      height={650}
+      style={{
+        border: 'none',
+        borderRadius: '24px',
+        background: 'white',
+        cursor: isDrawer ? 'crosshair' : 'default',
+        width: '100%',
+        height: '100%',
+      }}
+  />
   )
 }
 

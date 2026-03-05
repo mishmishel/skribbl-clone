@@ -5,7 +5,7 @@ import Lobby from './components/Lobby'
 import Canvas from './components/Canvas'
 import Chat from './components/Chat'
 import Scoreboard from './components/Scoreboard'
-import Playerlist from './components/Playerlist'
+import PlayerList from './components/Playerlist'
 
 function App() {
   const [gamePhase, setGamePhase] = useState('home') // 'home' | 'lobby' | 'game' | 'scoreboard'
@@ -105,21 +105,30 @@ function App() {
       />
       )}
       {gamePhase === 'game' && (
-        <div>
-          <p>Time left: {timeLeft}s</p>
-          <p>{currentDrawer === socket.id
-          ? currentWord
-          : currentWord.split('').map(char => char === ' ' ? ' ' : '_').join(' ')
-          }</p>
-          <Canvas
-          roomCode={roomCode}
-          isDrawer={currentDrawer === socket.id}
-          />
-          <Chat 
-          roomCode={roomCode} 
-          username={username} 
-          isDrawer={currentDrawer === socket.id} />
-          <Playerlist players={players} currentDrawer={currentDrawer} />
+        <div className="game-layout">
+          <div className="game-header">
+            <p className="pill">{currentDrawer === socket.id
+              ? currentWord
+              : currentWord.split('').map(char => char === ' ' ? ' ' : '_').join(' ')
+            }</p>
+            <p className="pill-green">time left: {timeLeft}s</p>
+          </div>
+          <div className="game-players">
+            <PlayerList players={players} currentDrawer={currentDrawer} />
+          </div>
+          <div className="game-canvas">
+            <Canvas
+              roomCode={roomCode}
+              isDrawer={currentDrawer === socket.id}
+            />
+          </div>
+          <div className="game-chat">
+            <Chat
+              roomCode={roomCode}
+              username={username}
+              isDrawer={currentDrawer === socket.id}
+            />
+          </div>
         </div>
       )}
       {gamePhase === 'scoreboard' && (
